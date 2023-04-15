@@ -1,26 +1,26 @@
-import { SafeAreaView, Text, StyleSheet } from "react-native";
 import LoginScreen from "./screens/LoginScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
-const AppNav = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <AppNav.Navigator>
-        <AppNav.Screen name="Login" component={LoginScreen} />
-        <AppNav.Screen name="Home" component={HomeScreen} />
-      </AppNav.Navigator>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: process.env.ENV === "production" ? false : true,
+        }}
+      >
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+      <Toast />
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  App: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

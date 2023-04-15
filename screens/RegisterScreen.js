@@ -4,18 +4,19 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
   TextInput,
   TouchableOpacity,
   Image,
 } from "react-native";
 import React from "react";
-import { showSuccess, showError } from "../service/Toast";
 import authRequest from "../api/authRequest";
+import { showError, showSuccess } from "../service/Toast";
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   const drinkCoffeeImage = require("../assets/icon.png");
+  // const { height } = useWindowDimensions();
 
+  const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -30,8 +31,8 @@ const LoginScreen = ({ navigation }) => {
           flexGrows: 1,
           justifyContent: "center",
           alignItems: "center",
-          // paddingTop: 80,
           paddingTop: 10,
+          // paddingTop: height * 0.1;
         }}
       >
         <View style={{ width: 130, height: 130 }}>
@@ -47,7 +48,18 @@ const LoginScreen = ({ navigation }) => {
           />
         </View>
         <View style={{ marginBottom: 20, flex: 1 }}>
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>Welcome Back</Text>
+          <Text style={{ fontSize: 30, fontWeight: "bold" }}>Register</Text>
+        </View>
+        <View style={{ ...styles.inputForm, flex: 1 }}>
+          <Text style={{ fontSize: 17, paddingHorizontal: 10 }}>Email :</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your email..."
+            value={email}
+            onChangeText={setEmail}
+            multiline={false}
+            textContentType="email"
+          />
         </View>
         <View style={{ ...styles.inputForm, flex: 1 }}>
           <Text style={{ fontSize: 17, paddingHorizontal: 10 }}>
@@ -75,34 +87,26 @@ const LoginScreen = ({ navigation }) => {
             textContentType="password"
           />
         </View>
-        <TouchableOpacity
-          style={{
-            width: 290,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#070A52", fontSize: 15, fontWeight: 400 }}>
-            Forgot your password...
-          </Text>
-        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.submitButton}
           activeOpacity={0.8}
           onPress={() => {
-            const loginResponse = authRequest.loginRequest({
+            const registerResponse = authRequest.registerRequest({
               username,
+              email,
               password,
             });
-            if (loginResponse) {
-              showSuccess("Login Success");
-              navigation.navigate("Home");
+            if (registerResponse) {
+              showSuccess("SignUp Success. Please Login");
+              navigation.navigate("Login");
             } else {
-              showError("Wrong Username Or Password");
+              showError("User is existing!");
             }
           }}
         >
           <Text style={{ color: "#fff", fontSize: 20, fontWeight: 300 }}>
-            Login
+            Sign up
           </Text>
         </TouchableOpacity>
         <View
@@ -115,13 +119,9 @@ const LoginScreen = ({ navigation }) => {
             borderWidth: 1,
           }}
         >
-          <Text style={{ fontSize: 17 }}>Don't have an account? </Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Register");
-            }}
-          >
-            <Text style={{ fontSize: 17, fontWeight: "bold" }}>Sign up</Text>
+          <Text style={{ fontSize: 17 }}>Have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ fontSize: 17, fontWeight: "bold" }}>Log In</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -140,10 +140,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    margin: 20,
+    marginBottom: 20,
   },
   input: {
-    marginTop: 10,
+    marginTop: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
@@ -168,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
